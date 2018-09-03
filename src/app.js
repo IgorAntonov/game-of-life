@@ -1,22 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
-import { hot } from 'react-hot-loader';
 
-import { Main } from './features/main';
-import { Header } from './features/header';
-import './ui/global-styles';
+import { Field } from './components/field';
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   min-height: 100vh;
+
+  background: grey;
 `;
 
-export const App = () => (
-  <Grid>
-    <Header />
-    <Main />
-  </Grid>
-);
+export class App extends Component {
+  state = {
+    rows: 30,
+    cols: 30,
+    speed: 100
+  }
 
-export const HotApp = hot(module)(App);
+  render() {
+    const { rows, cols, speed } = this.state;
+    return (
+      <Wrapper>
+        <Field
+          rows={rows}
+          cols={cols}
+          speed={speed}
+        />
+      </Wrapper>
+    );
+  }
+}
