@@ -1,45 +1,46 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { Cell, Container } from './styles';
 
 export class Field extends Component {
-  state = {
-    grid: []
+  static propTypes = {
+    cols: PropTypes.number.isRequired,
+    selectCell: PropTypes.func.isRequired,
+    grid: PropTypes.arrayOf(
+      PropTypes.arrayOf(PropTypes.bool)
+    ).isRequired
   }
 
-  componentDidMount() {
-    const { cols, rows } = this.props;
-    const grid = Array(rows).fill().map(() => Array(cols).fill(false));
-    this.setState({ grid });
-  }
+  createGrid = () => {
+    const { grid, selectCell } = this.props;
 
-
-  render() {
-    const { cols, rows } = this.props;
-    const { grid } = this.state;
-
-    if (grid.length === 0) return null;
-
-    const width = cols * 14;
-    const rowsArr = [];
-    for (let i = 0; i < rows; i += 1) {
-      for (let j = 0; j < cols; j += 1) {
+    return grid.reduce((acc, row, i) => {
+      const cellsRow = row.map((col, j) => {
         const id = `${i}_${j}`;
-        const cellStatus = grid[i][j] ? 'on' : 'off';
-        rowsArr.push(
+        const isAlive = grid[i][j];
+        return (
           <Cell
-            status={cellStatus}
+            status={isAlive}
             key={id}
             id={id}
             row={i}
             col={j}
+            onClick={selectCell(i, j)}
           />
         );
-      }
-    }
+      });
+      return [...acc, ...cellsRow];
+    }, []);
+  }
+
+  render() {
+    const { cols } = this.props;
+    const width = cols * 14;
+
     return (
       <Container width={width}>
-        {rowsArr}
+        {this.createGrid()}
       </Container>
     );
   }
