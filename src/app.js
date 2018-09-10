@@ -7,12 +7,11 @@ import { ControlPanel } from './components/control-panel';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
 
-  background: grey;
+  background: linear-gradient(#b2dfdb, #fff);
 `;
 
 export class App extends Component {
@@ -53,6 +52,7 @@ export class App extends Component {
 
   play = () => {
     const { speed } = this.state;
+    clearInterval(this.intervalId);
     this.intervalId = setInterval(this.createIteration, speed);
   }
 
@@ -61,6 +61,7 @@ export class App extends Component {
   }
 
   clearBoard = () => {
+    clearInterval(this.intervalId);
     this.setState({
       grid: Array(30).fill().map(() => Array(30).fill(false))
     });
@@ -80,7 +81,6 @@ export class App extends Component {
 
   changeSpeed = e => {
     if (e.which === 13) {
-      this.stop();
       this.play();
     }
   }
@@ -105,7 +105,6 @@ export class App extends Component {
           selectCell={this.selectCell}
           rows={rows}
           cols={cols}
-          speed={speed}
         />
       </Wrapper>
     );
